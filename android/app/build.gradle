@@ -1,0 +1,27 @@
+plugins {
+    id 'com.android.application'
+}
+
+android {
+    namespace 'com.waterpolo.tacticalboard'
+    compileSdk 35
+
+    defaultConfig {
+        applicationId "com.waterpolo.tacticalboard"
+        minSdk 24
+        targetSdk 36
+        versionCode 103
+        versionName "1.0.2"
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_11
+        targetCompatibility JavaVersion.VERSION_11
+    }
+}

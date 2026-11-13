@@ -1,0 +1,27 @@
+# Binaries & archives
+*.apk
+*.aab
+*.exe
+*.zip
+*.ipa
+archive/
+WaterPoloBoard-v2.0-alpha-macOS/
+
+# Keystores & keys
+*.jks
+*.keystore
+*.p8
+*.key
+
+# Build outputs
+bin/
+obj/
+build/
+DerivedData/
+*.xcodeproj/xcuserdata/
+*.xcworkspace/xcuserdata/
+build_output/
+
+# OS files
+Thumbs.db
+.DS_Store

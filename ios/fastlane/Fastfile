@@ -1,0 +1,49 @@
+default_platform(:ios)
+
+platform :ios do
+  desc "Build and upload iOS app to App Store Connect"
+  lane :release do
+    key_content = ENV["APP_STORE_PRIVATE_KEY"]
+    
+    api_key = app_store_connect_api_key(
+      key_id: ENV["APP_STORE_KEY_ID"],
+      issuer_id: ENV["APP_STORE_ISSUER_ID"],
+      key_content: key_content,
+      is_key_content_base64: false
+    )
+
+    create_keychain(
+      name: "build_keychain",
+      password: "temporary_password_123",
+      default_keychain: true,
+      unlock: true,
+      timeout: 3600
+    )
+
+    get_certificates(
+      api_key: api_key,
+      keychain_name: "build_keychain",
+      keychain_password: "temporary_password_123"
+    )
+
+    get_provisioning_profile(
+      api_key: api_key,
+      app_identifier: "com.waterpolo.tacticalboard"
+    )
+
+    build_app(
+      project: "WaterPoloBoard.xcodeproj",
+      scheme: "WaterPoloBoard",
+      export_method: "app-store",
+      clean: true,
+      output_directory: "../build_output",
+      output_name: "WaterPoloBoard.ipa"
+    )
+
+    upload_to_testflight(
+      api_key: api_key,
+      ipa: "../build_output/WaterPoloBoard.ipa",
+      skip_waiting_for_build_processing: true
+    )
+  end
+end

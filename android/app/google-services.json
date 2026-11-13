@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "404299942200",
+    "project_id": "waterpolo-tactic-board",
+    "storage_bucket": "waterpolo-tactic-board.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:404299942200:android:a76ac630c98d796a7259cd",
+        "android_client_info": {
+          "package_name": "com.waterpolo.tacticalboard"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "404299942200-k1ve3sb3qvssnnllmv8fmnhlrdcs5qm2.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.waterpolo.tacticalboard",
+            "certificate_hash": "10dae34277f8503bf0af0b0cafec9ce38cc87fe7"
+          }
+        },
+        {
+          "client_id": "404299942200-22120jsjjvavbofcm2qhdj48h4f26n1s.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB26_MtXl9oG6UVVkRJwv0ustRstrsti64"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "404299942200-22120jsjjvavbofcm2qhdj48h4f26n1s.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

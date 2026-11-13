@@ -1,0 +1,21 @@
+name: WaterPoloBoard
+options:
+  bundleIdPrefix: com.waterpolo
+  deploymentTarget:
+    iOS: "14.0"
+targets:
+  WaterPoloBoard:
+    type: application
+    platform: iOS
+    sources:
+      - path: WaterPoloBoard
+      - path: WebAssets
+        type: folder
+    info:
+      path: WaterPoloBoard/Info.plist
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.waterpolo.tacticalboard
+        MARKETING_VERSION: "1.0.2"
+        CURRENT_PROJECT_VERSION: "103"
+        TARGETED_DEVICE_FAMILY: "1,2"

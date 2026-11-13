@@ -1,0 +1,838 @@
+<!DOCTYPE html>
+<html lang="el">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>Waterpolo Tactical Board</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#090d16">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Waterpolo Tactical Board">
+  <link rel="apple-touch-icon" sizes="192x192" href="icon-192.png">
+  <link rel="apple-touch-icon" sizes="512x512" href="icon-512.png">
+</head>
+<body>
+  <div class="app-container">
+    <!-- Header / Top Bar -->
+    <header class="top-bar">
+      <!-- Left Branding -->
+      <div class="top-bar-left">
+        <div class="logo-area" id="aboutTrigger" role="button" tabindex="0" title="Ρυθμίσεις & Πληροφορίες" data-i18n-title="btn_settings">
+          <div class="logo-icon">
+            <img src="icon-192.png" alt="Logo" class="logo-img" />
+          </div>
+          <div class="logo-title-group">
+            <h1 data-i18n="app_title">Πινακάκι Τακτικής Πόλο</h1>
+            <span class="sub-logo" data-i18n="app_subtitle">Waterpolo Tactical Board</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Quick Preset & Custom Tactics -->
+      <div class="presets-bar">
+        <label data-i18n="preset_label">Έτοιμα Συστήματα:</label>
+        <select id="presetSelect">
+          <option value="" data-i18n="preset_select_default">-- Επιλέξτε Τακτική --</option>
+          <optgroup id="customTacticsGroup" label="⭐ Οι Τακτικές μου (Custom)" data-i18n-label="group_custom" style="display: none;">
+          </optgroup>
+          <optgroup label="Επίθεση" data-i18n-label="group_attack">
+            <option value="attack-6on5-33" data-i18n="tactic_6on5_33">Παίκτης Παραπάνω (6on5 - 3:3)</option>
+            <option value="attack-6on5-42" data-i18n="tactic_6on5_42">Παίκτης Παραπάνω (6on5 - 4:2)</option>
+            <option value="attack-even-set" data-i18n="tactic_even_set">Ίσα (Επίθεση με Φουνταριστό)</option>
+          </optgroup>
+          <optgroup label="Άμυνα" data-i18n-label="group_defense">
+            <option value="defense-zone-m" data-i18n="tactic_zone_m">Ζώνη M-Drop</option>
+            <option value="defense-press" data-i18n="tactic_press">Πιεστική Άμυνα (Pressing)</option>
+            <option value="defense-mandown" data-i18n="tactic_mandown">Παίκτης Λιγότερο (Άμυνα 5)</option>
+          </optgroup>
+          <optgroup label="Αντεπίθεση" data-i18n-label="group_counter">
+            <option value="counter-1on0" data-i18n="tactic_counter_1on0">Αντεπίθεση (1-on-0)</option>
+            <option value="counter-2on1" data-i18n="tactic_counter_2on1">Αντεπίθεση (2-on-1)</option>
+            <option value="counter-3on2" data-i18n="tactic_counter_3on2">Αντεπίθεση (3-on-2)</option>
+            <option value="counter-4on3" data-i18n="tactic_counter_4on3">Αντεπίθεση (4-on-3)</option>
+            <option value="counter-5on4" data-i18n="tactic_counter_5on4">Αντεπίθεση (5-on-4)</option>
+            <option value="counter-6on5" data-i18n="tactic_counter_6on5">Αντεπίθεση (6-on-5)</option>
+          </optgroup>
+        </select>
+        <button id="addCustomPresetBtn" class="btn-preset-action" title="Αποθήκευση της τρέχουσας τακτικής στη λίστα (Dropdown)" data-i18n-title="tooltip_add_custom_preset">
+          ⭐ <span data-i18n="btn_add_to_list">Προσθήκη</span>
+        </button>
+        <button id="deleteCustomPresetBtn" class="btn-preset-action btn-preset-del hidden" title="Διαγραφή επιλεγμένης custom τακτικής από τη λίστα" data-i18n-title="tooltip_delete_custom_preset">
+          🗑️
+        </button>
+      </div>
+
+      <!-- Top Actions -->
+      <div class="top-actions">
+        <!-- Quick Teams Pill -->
+        <button id="quickTeamsBtn" class="btn btn-outline btn-quick-teams" title="Ομάδες & Χρώματα Σκουφακιών" data-i18n-title="settings_teams_title">
+          <span id="topBarTeamsPill">⚔️ 🔵 vs 🛡️ ⚪</span>
+        </button>
+
+        <button id="resetPositionsBtn" class="btn btn-outline" data-i18n="btn_reset" data-i18n-title="tooltip_reset_positions" title="Επαναφορά Παικτών στις Αρχικές Θέσεις">
+          🔄 Αρχικές Θέσεις
+        </button>
+
+        <!-- Tactic File Management Button (Opens Modal) -->
+        <button id="fileMenuBtn" class="btn btn-outline btn-icon-only" title="Αρχείο / Τακτικές" data-i18n-title="btn_file_menu" aria-label="Αρχείο">
+          📁<span id="cloudStatusBadge" class="cloud-status-dot" title="Cloud Sync"></span>
+        </button>
+
+        <button id="settingsBtn" class="btn btn-outline btn-icon-only" title="Settings / Ρυθμίσεις" data-i18n-title="btn_settings" aria-label="Settings">
+          ⚙️
+        </button>
+      </div>
+    </header>
+
+    <!-- Main Workspace -->
+    <div class="main-content">
+      
+      <!-- Left Toolbar: Tools, Drawing, Views -->
+      <aside class="sidebar-left" id="sidebarLeft">
+        <!-- Sidebar Header -->
+        <div class="sidebar-header-bar">
+          <div class="sidebar-title-badge">
+            <span class="badge-icon">🛠️</span>
+            <span data-i18n="sidebar_tools_title">Εργαλεία</span>
+          </div>
+          <button id="closeSidebarBtn" class="btn-sidebar-close" title="Απόκρυψη Μενού" data-i18n-title="sidebar_close" aria-label="Close Sidebar">
+            <span class="close-arrow">◀</span>
+          </button>
+        </div>
+
+        <!-- View Toggle -->
+        <div class="tool-section collapsible" id="secView">
+          <div class="tool-section-header" role="button" tabindex="0">
+            <h3 data-i18n="sec_view">Όψη Γηπέδου</h3>
+            <span class="section-arrow">▼</span>
+          </div>
+          <div class="tool-section-body">
+            <div class="btn-group-toggle">
+              <button id="viewHalfBtn" class="btn-toggle active" data-view="half" data-i18n="view_half">
+                <span class="icon">📐</span> Μισό Γήπεδο
+              </button>
+              <button id="viewFullBtn" class="btn-toggle" data-view="full" data-i18n="view_full">
+                <span class="icon">🏟️</span> Ολόκληρο
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Mode Selection: Move Players vs Draw -->
+        <div class="tool-section collapsible" id="secMode">
+          <div class="tool-section-header" role="button" tabindex="0">
+            <h3 data-i18n="sec_mode">Λειτουργία</h3>
+            <span class="section-arrow">▼</span>
+          </div>
+          <div class="tool-section-body">
+            <div class="mode-buttons">
+              <button id="modeSelectBtn" class="mode-btn active" data-mode="select" data-i18n="mode_select">
+                <span class="icon">✋</span> Μετακίνηση
+              </button>
+              <button id="modeDrawBtn" class="mode-btn" data-mode="draw" data-i18n="mode_draw">
+                <span class="icon">✏️</span> Σχεδίαση
+              </button>
+              <button id="modeArrowBtn" class="mode-btn" data-mode="arrow" data-i18n="mode_arrow">
+                <span class="icon">↗️</span> Κίνηση
+              </button>
+              <button id="modePassBtn" class="mode-btn" data-mode="pass" data-i18n="mode_pass">
+                <span class="icon">⇢</span> Πάσα
+              </button>
+              <button id="modeEraserBtn" class="mode-btn" data-mode="eraser" data-i18n="mode_eraser">
+                <span class="icon">🧹</span> Σβήστρα
+              </button>
+              <button id="modeAngleBtn" class="mode-btn" data-mode="angle" data-i18n="mode_angle">
+                <span class="icon">🎯</span> Ανάλυση Σουτ
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Drawing Options -->
+        <div class="tool-section collapsible drawing-options-panel collapsed" id="drawingOptions">
+          <div class="tool-section-header" role="button" tabindex="0">
+            <h3 data-i18n="sec_drawing">Επιλογές Σχεδίασης</h3>
+            <span class="section-arrow">▼</span>
+          </div>
+          <div class="tool-section-body">
+            <div class="color-palette">
+              <button class="color-swatch active" style="background: #ffffff;" data-color="#ffffff" title="White"></button>
+              <button class="color-swatch" style="background: #ffe600;" data-color="#ffe600" title="Yellow"></button>
+              <button class="color-swatch" style="background: #ff3333;" data-color="#ff3333" title="Red"></button>
+              <button class="color-swatch" style="background: #00e5ff;" data-color="#00e5ff" title="Cyan"></button>
+              <button class="color-swatch" style="background: #000000;" data-color="#000000" title="Black"></button>
+              <button class="color-swatch" style="background: #39ff14;" data-color="#39ff14" title="Neon Green"></button>
+            </div>
+
+            <div class="stroke-size-wrapper">
+              <label><span data-i18n="label_stroke">Πάχος:</span> <span id="strokeSizeVal">4px</span></label>
+              <input type="range" id="strokeSize" min="2" max="12" value="4">
+            </div>
+
+            <div class="draw-actions">
+              <button id="undoDrawBtn" class="btn btn-sm btn-outline" data-i18n="btn_undo">↩️ Αναίρεση</button>
+              <button id="clearDrawBtn" class="btn btn-sm btn-danger" data-i18n="btn_clear_draw">🗑️ Καθαρισμός Σχεδίων</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Roster Tray: Cap Management -->
+        <div class="tool-section collapsible roster-section" id="secRoster">
+          <div class="tool-section-header" role="button" tabindex="0">
+            <h3 data-i18n="sec_roster">Σκουφάκια / Πάγκος</h3>
+            <span class="section-arrow">▼</span>
+          </div>
+          <div class="tool-section-body">
+            <div class="roster-tabs">
+              <button id="tabTeamWhite" class="roster-tab active" data-i18n="tab_white">⚪ Λευκά</button>
+              <button id="tabTeamBlue" class="roster-tab" data-i18n="tab_blue">🔵 Μπλε</button>
+            </div>
+
+            <div class="caps-tray" id="capsTray">
+              <!-- Populated dynamically: reserve caps that are off the pool -->
+            </div>
+            <div class="caps-tray-actions">
+              <button id="addCapBtn" class="btn btn-xs btn-outline-primary" data-i18n="btn_add_cap" title="Είσοδος επιλεγμένου σκουφιού στην πισίνα" data-i18n-title="tooltip_add_cap">➕ Add</button>
+              <button id="removeCapBtn" class="btn btn-xs btn-outline-danger" data-i18n="btn_remove_cap" title="Έξοδος επιλεγμένου σκουφιού στον πάγκο" data-i18n-title="tooltip_remove_cap">🚪 Remove</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Balls Management Section -->
+        <div class="tool-section collapsible balls-section collapsed" id="secBalls">
+          <div class="tool-section-header" role="button" tabindex="0">
+            <div class="balls-section-header-title">
+              <h3 data-i18n="sec_balls">Μπάλες</h3>
+              <span id="ballsCountBadge" class="balls-count-badge">1 στο νερό</span>
+            </div>
+            <span class="section-arrow">▼</span>
+          </div>
+          <div class="tool-section-body">
+            <div class="balls-palette-row">
+              <button class="btn-ball-toggle active" data-ball-color="yellow" title="Κίτρινη Μπάλα" data-i18n-title="ball_yellow">
+                <span class="ball-swatch-emoji">🟡</span>
+                <span class="ball-swatch-name" data-i18n="ball_yellow">Κίτρινη</span>
+              </button>
+              <button class="btn-ball-toggle" data-ball-color="orange" title="Πορτοκαλί Μπάλα" data-i18n-title="ball_orange">
+                <span class="ball-swatch-emoji">🟠</span>
+                <span class="ball-swatch-name" data-i18n="ball_orange">Πορτοκαλί</span>
+              </button>
+              <button class="btn-ball-toggle" data-ball-color="green" title="Πράσινη Μπάλα" data-i18n-title="ball_green">
+                <span class="ball-swatch-emoji">🟢</span>
+                <span class="ball-swatch-name" data-i18n="ball_green">Πράσινη</span>
+              </button>
+              <button class="btn-ball-toggle" data-ball-color="blue" title="Μπλε Μπάλα" data-i18n-title="ball_blue">
+                <span class="ball-swatch-emoji">🔵</span>
+                <span class="ball-swatch-name" data-i18n="ball_blue">Μπλε</span>
+              </button>
+              <button class="btn-ball-toggle" data-ball-color="pink" title="Ροζ Μπάλα" data-i18n-title="ball_pink">
+                <span class="ball-swatch-emoji">🟣</span>
+                <span class="ball-swatch-name" data-i18n="ball_pink">Ροζ</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </aside>
+
+      <!-- Center: Tactical Pool Board & Animation Timeline -->
+      <main class="board-area">
+        
+        <!-- Floating Toggle Tab to reopen sidebar when collapsed -->
+        <button id="floatingOpenSidebarBtn" class="floating-sidebar-tab" title="Εμφάνιση Μενού" data-i18n-title="sidebar_open" aria-label="Open Sidebar">
+          <span class="floating-arrow">▶</span>
+          <span class="floating-label" data-i18n="sidebar_tools_title">Εργαλεία</span>
+        </button>
+
+        <!-- Floating Toggle Tab to reopen bottom animation bar when collapsed -->
+        <button id="floatingOpenBottomBtn" class="floating-bottom-tab" title="Εμφάνιση Μπάρας Κίνησης" data-i18n-title="bottom_bar_open" aria-label="Open Bottom Bar">
+          <span class="floating-arrow">▲</span>
+          <span class="floating-label" data-i18n="bottom_bar_title">Φάσεις / Κίνηση</span>
+        </button>
+
+        <!-- Interactive Pool Container -->
+        <div class="pool-wrapper" id="poolWrapper">
+          <div class="pool-board" id="poolBoard">
+            <!-- Pool SVG Pitch (Background + lines) -->
+            <svg id="poolPitchSvg" class="pool-pitch" viewBox="0 0 1000 700" preserveAspectRatio="none">
+              <!-- Water defs & filters for realism -->
+              <defs>
+                <!-- Realistic Water Gradient (Deep Blue) -->
+                <radialGradient id="waterGlow" cx="50%" cy="50%" r="70%">
+                  <stop offset="0%" stop-color="#1496bb" />
+                  <stop offset="45%" stop-color="#0a698c" />
+                  <stop offset="85%" stop-color="#064866" />
+                  <stop offset="100%" stop-color="#043247" />
+                </radialGradient>
+
+                <!-- Olympic Turquoise / Aqua Water Gradient -->
+                <radialGradient id="waterGlowAqua" cx="50%" cy="50%" r="70%">
+                  <stop offset="0%" stop-color="#06b6d4" />
+                  <stop offset="45%" stop-color="#0891b2" />
+                  <stop offset="85%" stop-color="#0e7490" />
+                  <stop offset="100%" stop-color="#164e63" />
+                </radialGradient>
+
+                <!-- Pool Tile Grid Pattern -->
+                <pattern id="poolTiles" width="25" height="25" patternUnits="userSpaceOnUse">
+                  <path d="M 25 0 L 0 0 0 25" fill="none" stroke="rgba(255,255,255,0.04)" stroke-width="1"/>
+                </pattern>
+
+                <!-- Water Caustic shimmer overlay -->
+                <radialGradient id="caustic" cx="30%" cy="20%" r="50%">
+                  <stop offset="0%" stop-color="rgba(255,255,255,0.15)" />
+                  <stop offset="100%" stop-color="rgba(255,255,255,0)" />
+                </radialGradient>
+
+                <!-- Cap drop shadow -->
+                <filter id="capShadow" x="-20%" y="-20%" width="140%" height="140%">
+                  <feDropShadow dx="2" dy="4" stdDeviation="3" flood-color="#000" flood-opacity="0.5"/>
+                </filter>
+                <filter id="ballShadow" x="-30%" y="-30%" width="160%" height="160%">
+                  <feDropShadow dx="1" dy="3" stdDeviation="2.5" flood-color="#000" flood-opacity="0.6"/>
+                </filter>
+              </defs>
+
+              <!-- Dynamic Field SVG will be rendered by JS based on View (Half vs Full) -->
+              <g id="svgPitchContent"></g>
+            </svg>
+
+            <!-- Shooting Angle & Blocks SVG Overlay Layer -->
+            <svg id="shootingAngleSvg" class="shooting-angle-layer" viewBox="0 0 1000 680" preserveAspectRatio="none"></svg>
+
+            <!-- Drawing Canvas Layer -->
+            <canvas id="drawingCanvas" class="drawing-layer"></canvas>
+
+            <!-- Dynamic Tokens Layer (Players & Ball) -->
+            <div id="tokensLayer" class="tokens-layer"></div>
+
+            <!-- Floating Shooting Analysis HUD Widget -->
+            <div id="shootingAnalysisHud" class="shooting-analysis-hud hidden">
+              <div class="angle-hud-header">
+                <div class="angle-hud-title">
+                  <span class="angle-hud-badge">🎯</span>
+                  <span data-i18n="angle_hud_title">Ανάλυση Σουτ & Μπλοκ</span>
+                </div>
+                <button type="button" id="closeAngleHudBtn" class="angle-hud-close" title="Κλείσιμο" data-i18n-title="bottom_bar_close">&times;</button>
+              </div>
+              <div class="angle-hud-stats">
+                <div class="angle-stat-item">
+                  <span class="angle-stat-label" data-i18n="angle_shooter">Σουτέρ:</span>
+                  <strong id="angleShooterName" class="angle-stat-val angle-val-shooter">#7 Μπλε</strong>
+                </div>
+                <div class="angle-stat-item">
+                  <span class="angle-stat-label" data-i18n="angle_blocker">Μπλοκ:</span>
+                  <strong id="angleBlockerName" class="angle-stat-val angle-val-covered">#4 Λευκό</strong>
+                </div>
+                <div class="angle-stat-item">
+                  <span class="angle-stat-label" data-i18n="angle_dist">Απόσταση:</span>
+                  <strong id="angleDistanceVal" class="angle-stat-val">6.4m</strong>
+                </div>
+                <div class="angle-stat-item">
+                  <span class="angle-stat-label" data-i18n="angle_open">Ελεύθερη:</span>
+                  <strong id="angleOpenVal" class="angle-stat-val angle-val-open">65%</strong>
+                </div>
+              </div>
+              <div id="angleRuleBadge" class="angle-rule-badge">
+                ✅ Επιτρέπεται Άμεσο Σουτ (>6μ)
+              </div>
+            </div>
+
+            <!-- Toast / Notification overlay -->
+            <div id="boardToast" class="board-toast"></div>
+
+            <!-- Floating Exit Full Screen button (shown in Full Screen Mode) -->
+            <button id="exitFullscreenOverlayBtn" class="btn-exit-fullscreen-floating hidden" title="Έξοδος από Πλήρη Οθόνη (Esc)" data-i18n-title="btn_exit_fullscreen">
+              <span>🗗</span> <span data-i18n="btn_exit_fullscreen">Έξοδος Full Screen</span>
+            </button>
+          </div>
+        </div>
+
+      </main>
+
+    </div>
+
+    <!-- Bottom: Animation Timeline & Controls (Full screen width) -->
+    <section class="animation-bar">
+      <div class="anim-playback-controls">
+        <button id="playBtn" class="btn-anim" title="Αναπαραγωγή" data-i18n-title="play_btn">
+          <span id="playIcon">▶️</span> <span id="playText">Play</span>
+        </button>
+        <button id="fullscreenBtn" class="btn-anim-sm btn-fullscreen-toggle" title="Πλήρης Οθόνη (Full Screen)" data-i18n-title="btn_fullscreen">
+          <span id="fullscreenIcon">⛶</span> <span id="fullscreenText" data-i18n="btn_fullscreen">Full Screen</span>
+        </button>
+        
+        <div class="anim-speed">
+          <label data-i18n="label_speed">Ταχύτητα:</label>
+          <select id="animSpeedSelect">
+            <option value="0.5" data-i18n="speed_slow">0.5x (Αργό)</option>
+            <option value="1" selected data-i18n="speed_normal">1.0x (Κανονικό)</option>
+            <option value="1.5" data-i18n="speed_fast">1.5x (Γρήγορο)</option>
+            <option value="2">2.0x</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Frames Timeline (Scrollable for unlimited phases) -->
+      <div class="timeline-container" id="timelineContainer">
+        <div class="timeline-frames" id="timelineFrames">
+          <!-- Frame items will be rendered here -->
+        </div>
+      </div>
+
+      <!-- Frame Actions (Always fixed & visible, never pushed off-screen!) -->
+      <div class="frame-actions">
+        <button id="addFrameBtn" class="btn-add-frame" data-i18n="btn_add_frame">
+          ➕ Νέα Φάση
+        </button>
+        <button id="deleteFrameBtn" class="btn btn-xs btn-outline-danger" data-i18n="btn_delete">
+          🗑️ Διαγραφή
+        </button>
+        <button id="closeBottomBarBtn" class="btn btn-xs btn-outline btn-bottom-close" title="Απόκρυψη Μπάρας Κίνησης" data-i18n-title="bottom_bar_close" aria-label="Close Bottom Bar">
+          <span class="close-arrow">▼</span>
+        </button>
+      </div>
+    </section>
+  </div>
+
+  <!-- File & Tactics Management Modal -->
+  <div id="fileModal" class="modal-overlay hidden" role="dialog" aria-modal="true">
+    <div class="modal-card file-modal-card">
+      <div class="modal-header">
+        <div class="modal-header-title">
+          <span class="modal-emoji">📁</span>
+          <h2 data-i18n="file_modal_title">Διαχείριση Τακτικής</h2>
+        </div>
+        <button id="closeFileModalBtn" class="modal-close-btn" aria-label="Close">&times;</button>
+      </div>
+      <div class="modal-body file-modal-body">
+        <!-- Cloud Backup & Sync Section -->
+        <div class="cloud-sync-card" id="cloudSyncCard">
+          <div class="cloud-sync-guest" id="cloudSyncGuest">
+            <div class="cloud-sync-info">
+              <span class="cloud-icon">☁️</span>
+              <div class="cloud-text">
+                <strong data-i18n="cloud_backup_title">Cloud Backup & Συγχρονισμός</strong>
+                <small data-i18n="cloud_backup_sub">Συνδεθείτε για αυτόματο backup των τακτικών σας</small>
+              </div>
+            </div>
+            <div class="cloud-auth-form">
+              <input type="email" id="cloudEmailInput" class="cloud-input" placeholder="Email (π.χ. coach@waterpolo.gr)" data-i18n-placeholder="cloud_email_placeholder" autocomplete="email" />
+              <input type="password" id="cloudPasswordInput" class="cloud-input" placeholder="Κωδικός (τουλάχιστον 6 χαρακτήρες)" data-i18n-placeholder="cloud_password_placeholder" autocomplete="current-password" />
+              <div class="cloud-form-actions">
+                <button type="button" id="cloudSignInBtn" class="btn-cloud-primary">
+                  🔑 <span data-i18n="btn_login">Σύνδεση</span>
+                </button>
+                <button type="button" id="cloudSignUpBtn" class="btn-cloud-secondary">
+                  ✨ <span data-i18n="btn_signup">Εγγραφή</span>
+                </button>
+              </div>
+              <button type="button" id="cloudForgotPassBtn" class="btn-cloud-forgot">
+                <span data-i18n="btn_forgot_password">Ξεχάσατε τον κωδικό;</span>
+              </button>
+            </div>
+          </div>
+          <div class="cloud-sync-user hidden" id="cloudSyncUser">
+            <div class="cloud-user-details">
+              <div class="cloud-user-icon">👤</div>
+              <div class="cloud-user-text">
+                <strong id="cloudUserName">Προπονητής</strong>
+                <small id="cloudUserEmail" class="cloud-user-email"></small>
+                <div class="cloud-status-row">
+                  <span class="cloud-badge">🟢 <span data-i18n="cloud_active">Cloud Ενεργό</span></span>
+                  <span id="cloudSyncStatusText" class="cloud-sync-status-text" data-i18n="cloud_all_synced">Όλες οι τακτικές συγχρονίστηκαν</span>
+                </div>
+              </div>
+            </div>
+            <div class="cloud-user-actions">
+              <button id="cloudManualSyncBtn" class="btn-sync-action" type="button" title="Συγχρονισμός τώρα" data-i18n-title="btn_sync_now">
+                🔄 <span data-i18n="btn_sync_now">Συγχρονισμός</span>
+              </button>
+              <button id="googleSignOutBtn" class="btn-signout-action" type="button" title="Αποσύνδεση" data-i18n-title="btn_signout">
+                <span data-i18n="btn_signout">Έξοδος</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div class="modal-section-divider"></div>
+
+        <button id="saveTacticBtn" class="modal-action-card">
+          <span class="modal-action-icon">💾</span>
+          <div class="modal-action-info">
+            <strong data-i18n="btn_save">Αποθήκευση Τακτικής</strong>
+            <small data-i18n="sub_save_tactic">Αποθήκευση στη συσκευή (.json)</small>
+          </div>
+        </button>
+        <button id="loadTacticBtn" class="modal-action-card">
+          <span class="modal-action-icon">📂</span>
+          <div class="modal-action-info">
+            <strong data-i18n="btn_load">Φόρτωση Τακτικής</strong>
+            <small data-i18n="sub_load_tactic">Άνοιγμα αρχείου τακτικής</small>
+          </div>
+        </button>
+        <button id="shareTacticBtn" class="modal-action-card modal-action-card-highlight">
+          <span class="modal-action-icon">📤</span>
+          <div class="modal-action-info">
+            <strong data-i18n="btn_share">Κοινοποίηση Τακτικής</strong>
+            <small data-i18n="sub_share_tactic">Αποστολή σε Viber, WhatsApp, Gmail κ.α.</small>
+          </div>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Settings & About Modal -->
+  <div id="settingsModal" class="modal-overlay hidden" role="dialog" aria-modal="true">
+    <div class="modal-card settings-modal-card">
+      <div class="modal-header">
+        <div class="modal-header-title">
+          <span class="modal-emoji">⚙️</span>
+          <h2 data-i18n="settings_title">Ρυθμίσεις & Πληροφορίες</h2>
+        </div>
+        <button id="closeSettingsModalBtn" class="modal-close-btn" aria-label="Close">&times;</button>
+      </div>
+      <div class="modal-body settings-modal-body">
+        
+        <!-- SECTION 0: Language Selection -->
+        <div class="settings-section">
+          <div class="settings-section-title">
+            <span data-i18n="settings_tab_lang">🌐 Γλώσσα Εφαρμογής</span>
+          </div>
+          <div class="settings-row">
+            <div class="settings-row-label">
+              <span data-i18n="settings_lang_label">Επιλογή Γλώσσας</span>
+              <span class="settings-row-desc" data-i18n="settings_lang_desc">Γλώσσα προβολής για το μενού και τις ρυθμίσεις</span>
+            </div>
+            <div class="lang-selector-wrapper">
+              <span class="lang-icon">🌐</span>
+              <select id="langSelect" class="lang-select">
+                <option value="en">🇬🇧 English</option>
+                <option value="el">🇬🇷 Ελληνικά</option>
+                <option value="hu">🇭🇺 Magyar</option>
+                <option value="sr">🇷🇸 Srpski</option>
+                <option value="me">🇲🇪 Crnogorski</option>
+                <option value="de">🇩🇪 Deutsch</option>
+                <option value="tr">🇹🇷 Türkçe</option>
+                <option value="zh">🇨🇳 中文</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <!-- SECTION: Teams & Cap Colors (Επίθεση & Άμυνα) -->
+        <div class="settings-section">
+          <div class="settings-section-title">
+            <span data-i18n="settings_teams_title">🤽 Ομάδες & Χρώματα Σκουφακιών</span>
+          </div>
+          
+          <!-- Attack Team Row -->
+          <div class="settings-row">
+            <div class="settings-row-label">
+              <span data-i18n="settings_team_attack_label">⚔️ Ομάδα Επίθεσης</span>
+              <span class="settings-row-desc" data-i18n="settings_team_attack_desc">Χρώμα σκουφακιού για τους επιθετικούς & σουτέρ</span>
+            </div>
+            <div class="team-color-picker-group">
+              <div id="attackCapPreview" class="team-cap-mini-preview" title="Επίθεση"></div>
+              <div class="team-color-swatches" id="attackColorSwatches">
+                <button type="button" class="team-color-swatch swatch-white" data-color="white" title="Άσπρο" data-i18n-title="color_white"></button>
+                <button type="button" class="team-color-swatch swatch-blue active" data-color="blue" title="Μπλε" data-i18n-title="color_blue"></button>
+                <button type="button" class="team-color-swatch swatch-green" data-color="green" title="Πράσινο" data-i18n-title="color_green"></button>
+                <button type="button" class="team-color-swatch swatch-red" data-color="red" title="Κόκκινο" data-i18n-title="color_red"></button>
+                <button type="button" class="team-color-swatch swatch-yellow" data-color="yellow" title="Κίτρινο" data-i18n-title="color_yellow"></button>
+                <button type="button" class="team-color-swatch swatch-black" data-color="black" title="Μαύρο" data-i18n-title="color_black"></button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Defense Team Row -->
+          <div class="settings-row">
+            <div class="settings-row-label">
+              <span data-i18n="settings_team_defense_label">🛡️ Ομάδα Άμυνας</span>
+              <span class="settings-row-desc" data-i18n="settings_team_defense_desc">Χρώμα σκουφακιού για τους αμυντικούς & μπλοκ</span>
+            </div>
+            <div class="team-color-picker-group">
+              <div id="defenseCapPreview" class="team-cap-mini-preview" title="Άμυνα"></div>
+              <div class="team-color-swatches" id="defenseColorSwatches">
+                <button type="button" class="team-color-swatch swatch-white active" data-color="white" title="Άσπρο" data-i18n-title="color_white"></button>
+                <button type="button" class="team-color-swatch swatch-blue" data-color="blue" title="Μπλε" data-i18n-title="color_blue"></button>
+                <button type="button" class="team-color-swatch swatch-green" data-color="green" title="Πράσινο" data-i18n-title="color_green"></button>
+                <button type="button" class="team-color-swatch swatch-red" data-color="red" title="Κόκκινο" data-i18n-title="color_red"></button>
+                <button type="button" class="team-color-swatch swatch-yellow" data-color="yellow" title="Κίτρινο" data-i18n-title="color_yellow"></button>
+                <button type="button" class="team-color-swatch swatch-black" data-color="black" title="Μαύρο" data-i18n-title="color_black"></button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Swap Roles Button -->
+          <div class="settings-row">
+            <div class="settings-row-label">
+              <span data-i18n="settings_swap_teams_label">🔄 Αντιστροφή Ρόλων</span>
+              <span class="settings-row-desc" data-i18n="settings_swap_teams_desc">Εναλλαγή επίθεσης και άμυνας με ένα πάτημα</span>
+            </div>
+            <button type="button" id="swapTeamsBtn" class="btn btn-outline btn-sm">
+              <span>🔄</span> <span data-i18n="btn_swap_teams">Αντιστροφή</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- SECTION 1: Theme & Display -->
+        <div class="settings-section">
+          <div class="settings-section-title">
+            <span data-i18n="settings_tab_theme">🎨 Εμφάνιση & Θέμα</span>
+          </div>
+          
+          <!-- Theme Dark / Light -->
+          <div class="settings-row">
+            <div class="settings-row-label">
+              <span data-i18n="settings_theme_label">Λειτουργία Εμφάνισης</span>
+              <span class="settings-row-desc" data-i18n="settings_theme_desc">Σκούρο (γήπεδο/νύχτα) ή Ανοιχτό (ήλιος)</span>
+            </div>
+            <div class="segmented-control">
+              <button type="button" id="themeDarkBtn" class="segmented-btn active" data-theme="dark" data-i18n="settings_theme_dark">🌙 Σκούρο</button>
+              <button type="button" id="themeLightBtn" class="segmented-btn" data-theme="light" data-i18n="settings_theme_light">☀️ Ανοιχτό</button>
+            </div>
+          </div>
+
+          <!-- Cap & Ball Size -->
+          <div class="settings-row">
+            <div class="settings-row-label">
+              <span data-i18n="settings_cap_size_label">Μέγεθος Παικτών</span>
+              <span class="settings-row-desc" data-i18n="settings_cap_size_desc">Προσαρμογή μεγέθους για οθόνες αφής</span>
+            </div>
+            <div class="segmented-control">
+              <button type="button" id="capSizeNormalBtn" class="segmented-btn active" data-size="normal" data-i18n="settings_size_normal">Κανονικό</button>
+              <button type="button" id="capSizeLargeBtn" class="segmented-btn" data-size="large" data-i18n="settings_size_large">Μεγάλο (+20%)</button>
+            </div>
+          </div>
+
+          <!-- Water Tint -->
+          <div class="settings-row">
+            <div class="settings-row-label">
+              <span data-i18n="settings_water_label">Απόχρωση Νερού</span>
+              <span class="settings-row-desc" data-i18n="settings_water_desc">Επιλογή χρώματος πισίνας</span>
+            </div>
+            <div class="segmented-control">
+              <button type="button" id="waterDeepBtn" class="segmented-btn active" data-water="deep" data-i18n="settings_water_deep">🌊 Βαθύ Μπλε</button>
+              <button type="button" id="waterAquaBtn" class="segmented-btn" data-water="aqua" data-i18n="settings_water_aqua">💎 Τυρκουάζ</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- SECTION 2: Pitch Markings & Rules -->
+        <div class="settings-section">
+          <div class="settings-section-title">
+            <span data-i18n="settings_tab_pitch">📐 Σημάνσεις & Κανονισμοί</span>
+          </div>
+
+          <!-- 2m Offside Area Toggle -->
+          <div class="settings-row">
+            <div class="settings-row-label">
+              <span data-i18n="settings_show_2m_box">2m Offside Area (Goal Area)</span>
+              <span class="settings-row-desc" data-i18n="settings_2m_box_desc">Ορθογώνια περιοχή οφσάιντ 2 μέτρων</span>
+            </div>
+            <label class="switch">
+              <input type="checkbox" id="toggle2mBox" checked>
+              <span class="switch-slider"></span>
+            </label>
+          </div>
+
+          <!-- 5m & 6m Lines Toggle -->
+          <div class="settings-row">
+            <div class="settings-row-label">
+              <span data-i18n="settings_show_5m6m">Γραμμές 5μ & 6μ (Πέναλτι/Σουτ)</span>
+              <span class="settings-row-desc" data-i18n="settings_5m6m_desc">Κίτρινη (5μ) & Πράσινη (6μ) γραμμή</span>
+            </div>
+            <label class="switch">
+              <input type="checkbox" id="toggle5m6m" checked>
+              <span class="switch-slider"></span>
+            </label>
+          </div>
+        </div>
+
+        <!-- SECTION 3: Audio & Haptics -->
+        <div class="settings-section">
+          <div class="settings-section-title">
+            <span data-i18n="settings_tab_audio">🔔 Ήχοι & Ανάδραση</span>
+          </div>
+
+          <!-- Whistle Sound -->
+          <div class="settings-row">
+            <div class="settings-row-label">
+              <span data-i18n="settings_whistle">Σφυρίχτρα Διαιτητή στο Play</span>
+              <span class="settings-row-desc" data-i18n="settings_whistle_desc">Ήχος σφυρίχτρας κατά την έναρξη της φάσης</span>
+            </div>
+            <label class="switch">
+              <input type="checkbox" id="toggleWhistle" checked>
+              <span class="switch-slider"></span>
+            </label>
+          </div>
+
+          <!-- Haptics -->
+          <div class="settings-row">
+            <div class="settings-row-label">
+              <span data-i18n="settings_haptics">Δόνηση Αφής (Touch Screens)</span>
+              <span class="settings-row-desc" data-i18n="settings_haptics_desc">Ελαφριά δόνηση σε κινητά & tablets</span>
+            </div>
+            <label class="switch">
+              <input type="checkbox" id="toggleHaptics" checked>
+              <span class="switch-slider"></span>
+            </label>
+          </div>
+        </div>
+
+        <!-- SECTION 4: Interactive Guide & Tutorial -->
+        <div class="settings-section">
+          <div class="settings-section-title">
+            <span data-i18n="settings_tab_help">🎓 Βοήθεια & Οδηγός</span>
+          </div>
+          <div class="settings-row">
+            <div class="settings-row-label">
+              <span data-i18n="settings_tutorial_label">Οδηγός Χρήσης (Tutorial)</span>
+              <span class="settings-row-desc" data-i18n="settings_tutorial_desc">Επανάληψη του διαδραστικού οδηγού 5 βημάτων</span>
+            </div>
+            <button type="button" id="replayTutorialBtn" class="btn btn-primary btn-sm">
+              <span class="btn-icon">🎓</span> <span data-i18n="btn_replay_tutorial">Προβολή Οδηγού</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- SECTION 5: About & Creator -->
+        <div class="settings-section">
+          <div class="settings-section-title">
+            <span data-i18n="settings_tab_about">ℹ️ Σχετικά με την Εφαρμογή</span>
+          </div>
+          <div class="about-hero">
+            <div class="about-app-title">Waterpolo Tactical Board</div>
+            <div class="about-version-chip">
+              <span class="chip-label" data-i18n="about_version_label">Έκδοση</span>: <strong>v1.0.2 (Release)</strong>
+            </div>
+          </div>
+          <div class="about-contact-card" style="margin-top: 10px;">
+            <div class="contact-avatar">✉️</div>
+            <div class="contact-info">
+              <span class="contact-title" data-i18n="about_contact_label">Επικοινωνία & Υποστήριξη</span>
+              <a href="mailto:georgekoutoufas@outlook.com" class="contact-email">georgekoutoufas@outlook.com</a>
+            </div>
+          </div>
+          <p class="about-desc-text" data-i18n="about_desc" style="margin-top: 8px;">
+            Επαγγελματικό τακτικό πινακάκι υδατοσφαίρισης για προπονητές και παίκτες. Σχεδιασμός συστημάτων, κινούμενες φάσεις, αποθήκευση τακτικών και λειτουργία σε Windows, Android, macOS και iOS.
+          </p>
+          <div class="about-tech-list" style="margin-top: 8px;">
+            <div class="tech-item">📱 <strong>Android APK:</strong> WaterPoloBoard-v1.0.2.apk</div>
+            <div class="tech-item">💻 <strong>Windows App:</strong> WaterPoloBoard-v1.0.2.exe</div>
+            <div class="tech-item">🍎 <strong>macOS & iOS:</strong> WaterPoloBoard-v1.0.2 (.app / .ipa)</div>
+          </div>
+        </div>
+
+      </div>
+      <div class="modal-footer">
+        <button id="okSettingsModalBtn" class="btn btn-primary" style="min-width: 110px;">OK</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Interactive Onboarding & Tutorial Modal -->
+  <div id="tutorialModal" class="modal-overlay hidden" role="dialog" aria-modal="true">
+    <div class="modal-card tutorial-modal-card">
+      <div class="modal-header tutorial-card-header">
+        <div class="modal-header-title">
+          <span class="modal-emoji">🎓</span>
+          <span class="tutorial-step-indicator" id="tutorialStepIndicator">Βήμα 1 / 5</span>
+        </div>
+        <button id="closeTutorialBtn" class="modal-close-btn" aria-label="Close">&times;</button>
+      </div>
+
+      <div class="tutorial-card-body">
+        <div class="tutorial-hero-icon" id="tutorialHeroIcon">🤽‍♂️</div>
+        <h3 class="tutorial-step-title" id="tutorialStepTitle"></h3>
+        <p class="tutorial-step-desc" id="tutorialStepDesc"></p>
+        <div class="tutorial-visual-card" id="tutorialVisualCard"></div>
+      </div>
+
+      <div class="tutorial-card-footer">
+        <div class="tutorial-dots" id="tutorialDots">
+          <span class="tutorial-dot active"></span>
+          <span class="tutorial-dot"></span>
+          <span class="tutorial-dot"></span>
+          <span class="tutorial-dot"></span>
+          <span class="tutorial-dot"></span>
+        </div>
+        <div class="tutorial-actions">
+          <button type="button" id="tutorialPrevBtn" class="btn btn-secondary btn-sm" style="display: none;">⬅ Προηγούμενο</button>
+          <button type="button" id="tutorialSkipBtn" class="btn btn-ghost btn-sm">Παράλειψη</button>
+          <button type="button" id="tutorialNextBtn" class="btn btn-primary btn-sm">Επόμενο ➡</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- iOS Home Screen App Install Guide Modal (Auto-shown on iPhone/iPad Safari when not yet installed) -->
+  <div id="iosInstallModal" class="modal-overlay hidden" role="dialog" aria-modal="true">
+    <div class="modal-card">
+      <div class="modal-header">
+        <div class="modal-header-title">
+          <span class="modal-emoji">📲</span>
+          <h2 data-i18n="ios_modal_title">Εγκατάσταση σε iPhone / iPad</h2>
+        </div>
+        <button id="closeIosModalBtn" class="modal-close-btn" aria-label="Close">&times;</button>
+      </div>
+      <div class="modal-body">
+        <p class="about-desc-text" data-i18n="ios_modal_subtitle" style="color: #e2e8f0; font-size: 0.9rem;">
+          Για να εγκαταστήσετε το <strong>Πινακάκι Τακτικής Πόλο</strong> ως αυτόνομη εφαρμογή σε Πλήρη Οθόνη (και Offline) στη συσκευή σας Apple:
+        </p>
+        <div class="about-tech-list" style="gap: 10px; font-size: 0.85rem; color: #f8fafc;">
+          <div class="tech-item" data-i18n="ios_step1">1️⃣ Πατήστε το κουμπί <strong>Κοινοποίηση (Share ⬆️)</strong> στη μπάρα του Safari.</div>
+          <div class="tech-item" data-i18n="ios_step2">2️⃣ Σύρετε προς τα κάτω και πατήστε <strong>«Προσθήκη στην Οθόνη Αφετηρίας» (Add to Home Screen ➕)</strong>.</div>
+          <div class="tech-item" data-i18n="ios_step3">3️⃣ Πατήστε <strong>«Προσθήκη» (Add)</strong> πάνω δεξιά και ανοίξτε την εφαρμογή από το νέο εικονίδιο στην οθόνη σας!</div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button id="okIosModalBtn" class="btn btn-primary" style="min-width: 130px;" data-i18n="ios_btn_ok">Κατάλαβα</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Portrait Orientation Blocker (Displays when phone is held vertically) -->
+  <div id="portraitBlocker" class="portrait-blocker" role="alert" aria-live="assertive">
+    <div class="portrait-blocker-content">
+      <div class="rotate-phone-icon">
+        <svg viewBox="0 0 80 80" width="68" height="68" fill="none" stroke="currentColor">
+          <rect x="22" y="10" width="36" height="60" rx="7" stroke="#06b6d4" stroke-width="3" fill="rgba(6, 182, 212, 0.12)" />
+          <circle cx="40" cy="62" r="3" fill="#06b6d4" />
+          <path d="M57 20 C66 26, 70 38, 62 53" stroke="#f59e0b" stroke-width="3" stroke-linecap="round" stroke-dasharray="4,4" />
+          <polyline points="55,54 63,55 63,47" stroke="#f59e0b" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
+        </svg>
+      </div>
+      <h2 data-i18n="rotate_title">Γυρίστε τη συσκευή οριζόντια</h2>
+      <p class="rotate-subtitle" data-i18n="rotate_desc">Το Τακτικό Πινακάκι λειτουργεί αποκλειστικά σε οριζόντια προβολή (Landscape).</p>
+      <div class="rotate-ios-tip">
+        <span class="tip-badge" data-i18n="rotate_tip_badge">💡 Συμβουλή:</span>
+        <span data-i18n="rotate_hint">Αν δεν γυρίζει αυτόματα, βεβαιωθείτε ότι είναι ενεργοποιημένη η <strong>Αυτόματη Περιστροφή</strong> από τον πίνακα γρήγορων ρυθμίσεων της συσκευής σας.</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Hidden File Input for loading tactics (.json files) -->
+  <input type="file" id="tacticFileInput" accept=".json,application/json" style="display: none;">
+
+  <!-- Firebase SDK (Offline Local Bundle) -->
+  <script src="firebase-app.js"></script>
+  <script src="firebase-auth.js"></script>
+  <script src="firebase-firestore.js"></script>
+  <script src="firebase-sync.js"></script>
+
+  <!-- Translations & App Scripts -->
+  <script src="translations.js"></script>
+  <script src="app.js"></script>
+  <script>
+    if ('serviceWorker' in navigator && location.protocol.startsWith('http')) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('./sw.js').catch(err => console.log('SW registration:', err));
+      });
+    }
+  </script>
+</body>
+</html>

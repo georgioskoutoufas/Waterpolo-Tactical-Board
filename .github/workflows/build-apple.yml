@@ -1,0 +1,42 @@
+name: Build and Upload iOS App to App Store Connect
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [ main, master ]
+
+jobs:
+  build-and-upload:
+    runs-on: macos-14
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Prepare Web Assets
+        run: |
+          mkdir -p ios/WebAssets
+          cp index.html style.css app.js translations.js manifest.json sw.js icon-192.png icon-512.png ios/WebAssets/
+
+      - name: Install xcodegen
+        run: brew install xcodegen
+
+      - name: Generate Xcode Project
+        run: |
+          cd ios
+          xcodegen generate
+
+      - name: Deploy to App Store Connect via Fastlane
+        env:
+          APP_STORE_KEY_ID: ${{ secrets.APP_STORE_KEY_ID }}
+          APP_STORE_ISSUER_ID: ${{ secrets.APP_STORE_ISSUER_ID }}
+          APP_STORE_PRIVATE_KEY: ${{ secrets.APP_STORE_PRIVATE_KEY }}
+        run: |
+          cd ios
+          bundle exec fastlane release || fastlane release
+
+      - name: Upload IPA Artifact (Backup)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: WaterPoloBoard-iOS-IPA
+          path: build_output/*.ipa
