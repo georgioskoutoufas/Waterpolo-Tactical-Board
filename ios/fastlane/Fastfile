@@ -22,7 +22,11 @@ platform :ios do
       timeout: 3600
     )
 
-    kc_path = lane_context[SharedValues::KEYCHAIN_PATH] || File.expand_path("~/Library/Keychains/build_keychain-db")
+    raw_path = lane_context[SharedValues::KEYCHAIN_PATH] || "~/Library/Keychains/build_keychain"
+    expanded_path = File.expand_path(raw_path)
+    kc_path = File.exist?(expanded_path) ? expanded_path : "#{expanded_path}-db"
+
+    UI.message("Using keychain path: #{kc_path}")
 
     get_certificates(
       api_key: api_key,

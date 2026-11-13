@@ -32,7 +32,8 @@ jobs:
           APP_STORE_PRIVATE_KEY: ${{ secrets.APP_STORE_PRIVATE_KEY }}
         run: |
           cd ios
-          fastlane release
+          bundle install || true
+          bundle exec fastlane release
 
       - name: Upload IPA Artifact (Backup)
         if: always()
