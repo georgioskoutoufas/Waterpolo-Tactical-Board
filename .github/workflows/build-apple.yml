@@ -15,7 +15,8 @@ jobs:
       - name: Prepare Web Assets
         run: |
           mkdir -p ios/WebAssets
-          cp index.html style.css app.js translations.js manifest.json sw.js icon-192.png icon-512.png ios/WebAssets/
+          cp index.html style.css app.js translations.js manifest.json sw.js version.json icon-192.png icon-512.png firebase-*.js ios/WebAssets/ || true
+          cp -r lib ios/WebAssets/ || true
 
       - name: Install xcodegen
         run: brew install xcodegen
@@ -23,6 +24,7 @@ jobs:
       - name: Generate Xcode Project
         run: |
           cd ios
+          rm -rf WaterPoloBoard.xcodeproj
           xcodegen generate
 
       - name: Deploy to App Store Connect via Fastlane
@@ -32,8 +34,7 @@ jobs:
           APP_STORE_PRIVATE_KEY: ${{ secrets.APP_STORE_PRIVATE_KEY }}
         run: |
           cd ios
-          bundle install || true
-          bundle exec fastlane release
+          fastlane release
 
       - name: Upload IPA Artifact (Backup)
         if: always()

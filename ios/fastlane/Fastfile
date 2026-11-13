@@ -28,15 +28,45 @@ platform :ios do
 
     UI.message("Using keychain path: #{kc_path}")
 
+    begin
+      require 'spaceship'
+      Spaceship::ConnectAPI::Certificate.all.each do |c|
+        if c.certificate_type.to_s.include?("DISTRIBUTION")
+          UI.message("Cleaning up previous ephemeral CI certificate: #{c.id} (#{c.certificate_type})")
+          c.delete!
+        end
+      end
+    rescue => ex
+      UI.message("Note during certificate cleanup: #{ex.message}")
+    end
+
     get_certificates(
       api_key: api_key,
       keychain_path: kc_path,
-      keychain_password: "temporary_password_123"
+      keychain_password: "temporary_password_123",
+      force: true
     )
 
     get_provisioning_profile(
       api_key: api_key,
-      app_identifier: "com.waterpolo.tacticalboard"
+      app_identifier: "com.waterpolo.tacticalboard",
+      force: true
+    )
+
+    profile_path = lane_context[SharedValues::SIGH_PROFILE_PATH]
+    plist_xml = sh("security cms -D -i \"#{profile_path}\"", log: false)
+    team_match = plist_xml.match(/<key>TeamIdentifier<\/key>\s*<array>\s*<string>([A-Z0-9]+)<\/string>/)
+    team_id = team_match ? team_match[1] : ""
+    UI.message("Detected Apple Developer Team ID: #{team_id}")
+
+    update_code_signing_settings(
+      use_automatic_signing: false,
+      path: "WaterPoloBoard.xcodeproj",
+      team_id: team_id,
+      bundle_identifier: "com.waterpolo.tacticalboard",
+      code_sign_identity: "Apple Distribution",
+      profile_name: lane_context[SharedValues::SIGH_NAME],
+      profile_uuid: lane_context[SharedValues::SIGH_UUID]
     )
 
     build_app(
@@ -45,7 +75,15 @@ platform :ios do
       export_method: "app-store",
       clean: true,
       output_directory: "../build_output",
-      output_name: "WaterPoloBoard.ipa"
+      output_name: "WaterPoloBoard.ipa",
+      export_options: {
+        method: "app-store",
+        signingStyle: "manual",
+        teamID: team_id,
+        provisioningProfiles: {
+          "com.waterpolo.tacticalboard" => lane_context[SharedValues::SIGH_NAME]
+        }
+      }
     )
 
     upload_to_testflight(
