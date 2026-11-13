@@ -1,5 +1,7 @@
 default_platform(:ios)
 
+opt_out_usage
+
 platform :ios do
   desc "Build and upload iOS app to App Store Connect"
   lane :release do
@@ -20,9 +22,11 @@ platform :ios do
       timeout: 3600
     )
 
+    kc_path = lane_context[SharedValues::KEYCHAIN_PATH] || File.expand_path("~/Library/Keychains/build_keychain-db")
+
     get_certificates(
       api_key: api_key,
-      keychain_name: "build_keychain",
+      keychain_path: kc_path,
       keychain_password: "temporary_password_123"
     )
 
