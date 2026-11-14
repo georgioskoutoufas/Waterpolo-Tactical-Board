@@ -310,33 +310,39 @@
 
             <!-- Floating Shooting Analysis HUD Widget -->
             <div id="shootingAnalysisHud" class="shooting-analysis-hud hidden">
-              <div class="angle-hud-header">
+              <div class="angle-hud-header" id="angleHudHeader">
                 <div class="angle-hud-title">
                   <span class="angle-hud-badge">🎯</span>
-                  <span data-i18n="angle_hud_title">Ανάλυση Σουτ & Μπλοκ</span>
+                  <span class="angle-hud-title-text" data-i18n="angle_hud_title">Ανάλυση Σουτ</span>
+                  <span id="angleHudMiniSummary" class="angle-hud-mini-summary"></span>
                 </div>
-                <button type="button" id="closeAngleHudBtn" class="angle-hud-close" title="Κλείσιμο" data-i18n-title="bottom_bar_close">&times;</button>
-              </div>
-              <div class="angle-hud-stats">
-                <div class="angle-stat-item">
-                  <span class="angle-stat-label" data-i18n="angle_shooter">Σουτέρ:</span>
-                  <strong id="angleShooterName" class="angle-stat-val angle-val-shooter">#7 Μπλε</strong>
-                </div>
-                <div class="angle-stat-item">
-                  <span class="angle-stat-label" data-i18n="angle_blocker">Μπλοκ:</span>
-                  <strong id="angleBlockerName" class="angle-stat-val angle-val-covered">#4 Λευκό</strong>
-                </div>
-                <div class="angle-stat-item">
-                  <span class="angle-stat-label" data-i18n="angle_dist">Απόσταση:</span>
-                  <strong id="angleDistanceVal" class="angle-stat-val">6.4m</strong>
-                </div>
-                <div class="angle-stat-item">
-                  <span class="angle-stat-label" data-i18n="angle_open">Ελεύθερη:</span>
-                  <strong id="angleOpenVal" class="angle-stat-val angle-val-open">65%</strong>
+                <div class="angle-hud-controls">
+                  <button type="button" id="minimizeAngleHudBtn" class="angle-hud-btn" title="Ελαχιστοποίηση" aria-label="Minimize">—</button>
+                  <button type="button" id="closeAngleHudBtn" class="angle-hud-btn" title="Κλείσιμο" data-i18n-title="bottom_bar_close" aria-label="Close">&times;</button>
                 </div>
               </div>
-              <div id="angleRuleBadge" class="angle-rule-badge">
-                ✅ Επιτρέπεται Άμεσο Σουτ (>6μ)
+              <div class="angle-hud-content" id="angleHudContent">
+                <div class="angle-hud-stats">
+                  <div class="angle-stat-item">
+                    <span class="angle-stat-label" data-i18n="angle_shooter">Σουτέρ:</span>
+                    <strong id="angleShooterName" class="angle-stat-val angle-val-shooter">#7 Μπλε</strong>
+                  </div>
+                  <div class="angle-stat-item">
+                    <span class="angle-stat-label" data-i18n="angle_blocker">Μπλοκ:</span>
+                    <strong id="angleBlockerName" class="angle-stat-val angle-val-covered">#4 Λευκό</strong>
+                  </div>
+                  <div class="angle-stat-item">
+                    <span class="angle-stat-label" data-i18n="angle_dist">Απόσταση:</span>
+                    <strong id="angleDistanceVal" class="angle-stat-val">6.4m</strong>
+                  </div>
+                  <div class="angle-stat-item">
+                    <span class="angle-stat-label" data-i18n="angle_open">Ελεύθερη:</span>
+                    <strong id="angleOpenVal" class="angle-stat-val angle-val-open">65%</strong>
+                  </div>
+                </div>
+                <div id="angleRuleBadge" class="angle-rule-badge">
+                  ✅ Επιτρέπεται Άμεσο Σουτ (>6μ)
+                </div>
               </div>
             </div>
 

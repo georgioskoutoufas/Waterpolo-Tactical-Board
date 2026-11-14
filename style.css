@@ -2001,6 +2001,55 @@ body.is-fullscreen-mode .ball-token {
     width: 20px;
     height: 20px;
   }
+  .shooting-analysis-hud {
+    width: 175px;
+    max-width: calc(100% - 16px);
+    padding: 4px 6px;
+    gap: 3px;
+    bottom: 6px;
+    right: 6px;
+    border-radius: 8px;
+  }
+  .shooting-analysis-hud.is-minimized {
+    min-width: 140px;
+    padding: 3px 6px;
+  }
+  .angle-hud-header {
+    padding-bottom: 2px;
+  }
+  .angle-hud-title {
+    font-size: 0.60rem;
+    gap: 3px;
+  }
+  .angle-hud-mini-summary {
+    font-size: 0.58rem;
+    padding: 0 3px;
+  }
+  .angle-hud-btn {
+    font-size: 0.85rem;
+    padding: 0 2px;
+  }
+  .angle-hud-content {
+    gap: 3px;
+  }
+  .angle-hud-stats {
+    gap: 3px;
+  }
+  .angle-stat-item {
+    padding: 2px 4px;
+    border-radius: 4px;
+  }
+  .angle-stat-label {
+    font-size: 0.50rem;
+  }
+  .angle-stat-val {
+    font-size: 0.68rem;
+  }
+  .angle-rule-badge {
+    font-size: 0.55rem;
+    padding: 2px 4px;
+    border-radius: 4px;
+  }
 }
 
 /* ==========================================================================
@@ -3133,24 +3182,58 @@ body.light-theme .modal-section-divider {
 
 .shooting-analysis-hud {
   position: absolute;
-  bottom: 16px;
-  right: 16px;
-  width: 310px;
-  max-width: calc(100% - 32px);
+  bottom: 12px;
+  right: 12px;
+  width: 230px;
+  max-width: calc(100% - 24px);
   background: rgba(15, 23, 42, 0.94);
   backdrop-filter: blur(14px);
   -webkit-backdrop-filter: blur(14px);
   border: 1px solid rgba(56, 189, 248, 0.4);
   box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.65), 0 0 16px rgba(56, 189, 248, 0.2);
-  border-radius: 12px;
-  padding: 12px 14px;
+  border-radius: 10px;
+  padding: 8px 10px;
   display: flex;
   flex-direction: column;
-  gap: 9px;
+  gap: 6px;
   z-index: 120;
   color: #f8fafc;
   pointer-events: auto;
+  touch-action: none;
   animation: hudFadeIn 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: width 0.2s ease, padding 0.2s ease;
+}
+
+.shooting-analysis-hud.is-minimized {
+  width: auto;
+  min-width: 165px;
+  padding: 4px 8px;
+  gap: 0;
+}
+
+.shooting-analysis-hud.is-minimized .angle-hud-content {
+  display: none !important;
+}
+
+.shooting-analysis-hud.is-minimized .angle-hud-header {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.angle-hud-mini-summary {
+  display: none;
+  font-size: 0.65rem;
+  font-weight: 700;
+  color: #38bdf8;
+  background: rgba(56, 189, 248, 0.15);
+  border: 1px solid rgba(56, 189, 248, 0.3);
+  padding: 1px 5px;
+  border-radius: 4px;
+  margin-left: 3px;
+}
+
+.shooting-analysis-hud.is-minimized .angle-hud-mini-summary {
+  display: inline-block;
 }
 
 @keyframes hudFadeIn {
@@ -3163,61 +3246,84 @@ body.light-theme .modal-section-divider {
   align-items: center;
   justify-content: space-between;
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-  padding-bottom: 6px;
+  padding-bottom: 4px;
+  cursor: move;
+  user-select: none;
+  -webkit-user-select: none;
 }
 
 .angle-hud-title {
   display: flex;
   align-items: center;
-  gap: 6px;
-  font-size: 0.8rem;
+  gap: 4px;
+  font-size: 0.70rem;
   font-weight: 700;
   color: #38bdf8;
   text-transform: uppercase;
-  letter-spacing: 0.4px;
+  letter-spacing: 0.3px;
+  pointer-events: none;
 }
 
-.angle-hud-close {
+.angle-hud-controls {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+}
+
+.angle-hud-btn {
   background: transparent;
   border: none;
   color: #94a3b8;
-  font-size: 1.25rem;
+  font-size: 1.05rem;
   line-height: 1;
   cursor: pointer;
-  padding: 2px 6px;
+  padding: 1px 4px;
   border-radius: 4px;
   transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-.angle-hud-close:hover {
+.angle-hud-btn:hover {
   color: #ffffff;
   background: rgba(255, 255, 255, 0.15);
+}
+
+.angle-hud-content {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
 }
 
 .angle-hud-stats {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 7px;
+  gap: 5px;
 }
 
 .angle-stat-item {
   background: rgba(0, 0, 0, 0.32);
   border: 1px solid rgba(255, 255, 255, 0.08);
   border-radius: 6px;
-  padding: 6px 8px;
+  padding: 3px 6px;
   display: flex;
   flex-direction: column;
-  gap: 2px;
+  gap: 1px;
 }
 
 .angle-stat-label {
-  font-size: 0.68rem;
+  font-size: 0.58rem;
   color: #94a3b8;
   text-transform: uppercase;
   font-weight: 600;
 }
 
 .angle-stat-val {
+  font-size: 0.80rem;
+  font-weight: 800;
+  color: #f8fafc;
+}
   font-size: 0.92rem;
   font-weight: 800;
   color: #f8fafc;

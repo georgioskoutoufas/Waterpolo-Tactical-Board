@@ -310,33 +310,39 @@
 
             <!-- Floating Shooting Analysis HUD Widget -->
             <div id="shootingAnalysisHud" class="shooting-analysis-hud hidden">
-              <div class="angle-hud-header">
+              <div class="angle-hud-header" id="angleHudHeader">
                 <div class="angle-hud-title">
                   <span class="angle-hud-badge">🎯</span>
-                  <span data-i18n="angle_hud_title">Ανάλυση Σουτ & Μπλοκ</span>
+                  <span class="angle-hud-title-text" data-i18n="angle_hud_title">Ανάλυση Σουτ</span>
+                  <span id="angleHudMiniSummary" class="angle-hud-mini-summary"></span>
                 </div>
-                <button type="button" id="closeAngleHudBtn" class="angle-hud-close" title="Κλείσιμο" data-i18n-title="bottom_bar_close">&times;</button>
-              </div>
-              <div class="angle-hud-stats">
-                <div class="angle-stat-item">
-                  <span class="angle-stat-label" data-i18n="angle_shooter">Σουτέρ:</span>
-                  <strong id="angleShooterName" class="angle-stat-val angle-val-shooter">#7 Μπλε</strong>
-                </div>
-                <div class="angle-stat-item">
-                  <span class="angle-stat-label" data-i18n="angle_blocker">Μπλοκ:</span>
-                  <strong id="angleBlockerName" class="angle-stat-val angle-val-covered">#4 Λευκό</strong>
-                </div>
-                <div class="angle-stat-item">
-                  <span class="angle-stat-label" data-i18n="angle_dist">Απόσταση:</span>
-                  <strong id="angleDistanceVal" class="angle-stat-val">6.4m</strong>
-                </div>
-                <div class="angle-stat-item">
-                  <span class="angle-stat-label" data-i18n="angle_open">Ελεύθερη:</span>
-                  <strong id="angleOpenVal" class="angle-stat-val angle-val-open">65%</strong>
+                <div class="angle-hud-controls">
+                  <button type="button" id="minimizeAngleHudBtn" class="angle-hud-btn" title="Ελαχιστοποίηση" aria-label="Minimize">—</button>
+                  <button type="button" id="closeAngleHudBtn" class="angle-hud-btn" title="Κλείσιμο" data-i18n-title="bottom_bar_close" aria-label="Close">&times;</button>
                 </div>
               </div>
-              <div id="angleRuleBadge" class="angle-rule-badge">
-                ✅ Επιτρέπεται Άμεσο Σουτ (>6μ)
+              <div class="angle-hud-content" id="angleHudContent">
+                <div class="angle-hud-stats">
+                  <div class="angle-stat-item">
+                    <span class="angle-stat-label" data-i18n="angle_shooter">Σουτέρ:</span>
+                    <strong id="angleShooterName" class="angle-stat-val angle-val-shooter">#7 Μπλε</strong>
+                  </div>
+                  <div class="angle-stat-item">
+                    <span class="angle-stat-label" data-i18n="angle_blocker">Μπλοκ:</span>
+                    <strong id="angleBlockerName" class="angle-stat-val angle-val-covered">#4 Λευκό</strong>
+                  </div>
+                  <div class="angle-stat-item">
+                    <span class="angle-stat-label" data-i18n="angle_dist">Απόσταση:</span>
+                    <strong id="angleDistanceVal" class="angle-stat-val">6.4m</strong>
+                  </div>
+                  <div class="angle-stat-item">
+                    <span class="angle-stat-label" data-i18n="angle_open">Ελεύθερη:</span>
+                    <strong id="angleOpenVal" class="angle-stat-val angle-val-open">65%</strong>
+                  </div>
+                </div>
+                <div id="angleRuleBadge" class="angle-rule-badge">
+                  ✅ Επιτρέπεται Άμεσο Σουτ (>6μ)
+                </div>
               </div>
             </div>
 
@@ -707,7 +713,7 @@
           <div class="about-hero">
             <div class="about-app-title">Waterpolo Tactical Board</div>
             <div class="about-version-chip">
-              <span class="chip-label" data-i18n="about_version_label">Έκδοση</span>: <strong>v1.0.2 (Release)</strong>
+              <span class="chip-label" data-i18n="about_version_label">Έκδοση</span>: <strong>v1.0.3 (Release)</strong>
             </div>
           </div>
           <div class="about-contact-card" style="margin-top: 10px;">
@@ -721,9 +727,9 @@
             Επαγγελματικό τακτικό πινακάκι υδατοσφαίρισης για προπονητές και παίκτες. Σχεδιασμός συστημάτων, κινούμενες φάσεις, αποθήκευση τακτικών και λειτουργία σε Windows, Android, macOS και iOS.
           </p>
           <div class="about-tech-list" style="margin-top: 8px;">
-            <div class="tech-item">📱 <strong>Android APK:</strong> WaterPoloBoard-v1.0.2.apk</div>
-            <div class="tech-item">💻 <strong>Windows App:</strong> WaterPoloBoard-v1.0.2.exe</div>
-            <div class="tech-item">🍎 <strong>macOS & iOS:</strong> WaterPoloBoard-v1.0.2 (.app / .ipa)</div>
+            <div class="tech-item">📱 <strong>Android APK:</strong> WaterPoloBoard-v1.0.3.apk</div>
+            <div class="tech-item">💻 <strong>Windows App:</strong> WaterPoloBoard-v1.0.3.exe</div>
+            <div class="tech-item">🍎 <strong>macOS & iOS:</strong> WaterPoloBoard-v1.0.3 (.app / .ipa)</div>
           </div>
         </div>
 

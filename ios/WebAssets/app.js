@@ -268,6 +268,9 @@
     toggleHaptics: document.getElementById('toggleHaptics'),
     shootingAngleSvg: document.getElementById('shootingAngleSvg'),
     shootingAnalysisHud: document.getElementById('shootingAnalysisHud'),
+    angleHudHeader: document.getElementById('angleHudHeader'),
+    minimizeAngleHudBtn: document.getElementById('minimizeAngleHudBtn'),
+    angleHudMiniSummary: document.getElementById('angleHudMiniSummary'),
     closeAngleHudBtn: document.getElementById('closeAngleHudBtn'),
     angleShooterName: document.getElementById('angleShooterName'),
     angleBlockerName: document.getElementById('angleBlockerName'),
@@ -2135,6 +2138,7 @@ const DEFAULT_SETTINGS = {
       if (el.angleDistanceVal) el.angleDistanceVal.textContent = `${distMeters.toFixed(1)}m`;
       if (el.angleOpenVal) el.angleOpenVal.textContent = `${openPct}%`;
       if (el.angleCoveredVal) el.angleCoveredVal.textContent = `${coveredPct}%`;
+      if (el.angleHudMiniSummary) el.angleHudMiniSummary.textContent = `${distMeters.toFixed(1)}m • ${openPct}%`;
       if (el.angleRuleBadge) {
         if (distMeters > 6.0) {
           el.angleRuleBadge.className = 'angle-rule-badge';
@@ -2241,8 +2245,10 @@ const DEFAULT_SETTINGS = {
         }
       }
       if (el.angleDistanceVal) el.angleDistanceVal.textContent = `${distMeters.toFixed(1)}m`;
-      if (el.angleOpenVal) el.angleOpenVal.textContent = activeBlockers.length > 0 ? '60%' : '85%';
+      const fullOpenPct = activeBlockers.length > 0 ? 60 : 85;
+      if (el.angleOpenVal) el.angleOpenVal.textContent = `${fullOpenPct}%`;
       if (el.angleCoveredVal) el.angleCoveredVal.textContent = activeBlockers.length > 0 ? '40%' : '15%';
+      if (el.angleHudMiniSummary) el.angleHudMiniSummary.textContent = `${distMeters.toFixed(1)}m • ${fullOpenPct}%`;
       if (el.angleRuleBadge) {
         if (distMeters > 6.0) {
           el.angleRuleBadge.className = 'angle-rule-badge';
@@ -4082,6 +4088,71 @@ const DEFAULT_SETTINGS = {
         const selectBtn = document.querySelector('.mode-btn[data-mode="select"]');
         if (selectBtn) selectBtn.click();
       });
+    }
+
+    if (el.minimizeAngleHudBtn && el.shootingAnalysisHud) {
+      el.minimizeAngleHudBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const isMin = el.shootingAnalysisHud.classList.toggle('is-minimized');
+        el.minimizeAngleHudBtn.textContent = isMin ? '▲' : '—';
+        el.minimizeAngleHudBtn.title = isMin ? 'Ανάπτυξη' : 'Ελαχιστοποίηση';
+      });
+    }
+
+    // Draggable Shooting Analysis HUD
+    let isDraggingHud = false;
+    let hudStartX = 0, hudStartY = 0, hudInitialLeft = 0, hudInitialTop = 0;
+
+    if (el.angleHudHeader && el.shootingAnalysisHud && el.poolBoard) {
+      const onHudPointerDown = (e) => {
+        if (e.target.closest('.angle-hud-btn')) return;
+        isDraggingHud = true;
+        const boardRect = el.poolBoard.getBoundingClientRect();
+        const hudRect = el.shootingAnalysisHud.getBoundingClientRect();
+        
+        hudStartX = e.clientX;
+        hudStartY = e.clientY;
+        hudInitialLeft = hudRect.left - boardRect.left;
+        hudInitialTop = hudRect.top - boardRect.top;
+        
+        el.shootingAnalysisHud.style.bottom = 'auto';
+        el.shootingAnalysisHud.style.right = 'auto';
+        el.shootingAnalysisHud.style.left = `${hudInitialLeft}px`;
+        el.shootingAnalysisHud.style.top = `${hudInitialTop}px`;
+        
+        try { el.angleHudHeader.setPointerCapture(e.pointerId); } catch (err) {}
+        e.preventDefault();
+      };
+      
+      const onHudPointerMove = (e) => {
+        if (!isDraggingHud) return;
+        const dx = e.clientX - hudStartX;
+        const dy = e.clientY - hudStartY;
+        
+        const boardRect = el.poolBoard.getBoundingClientRect();
+        const hudRect = el.shootingAnalysisHud.getBoundingClientRect();
+        
+        let newLeft = hudInitialLeft + dx;
+        let newTop = hudInitialTop + dy;
+        
+        newLeft = Math.max(4, Math.min(boardRect.width - hudRect.width - 4, newLeft));
+        newTop = Math.max(4, Math.min(boardRect.height - hudRect.height - 4, newTop));
+        
+        el.shootingAnalysisHud.style.left = `${newLeft}px`;
+        el.shootingAnalysisHud.style.top = `${newTop}px`;
+      };
+      
+      const onHudPointerUp = (e) => {
+        if (isDraggingHud) {
+          isDraggingHud = false;
+          try { el.angleHudHeader.releasePointerCapture(e.pointerId); } catch (err) {}
+        }
+      };
+      
+      el.angleHudHeader.addEventListener('pointerdown', onHudPointerDown);
+      el.angleHudHeader.addEventListener('pointermove', onHudPointerMove);
+      el.angleHudHeader.addEventListener('pointerup', onHudPointerUp);
+      el.angleHudHeader.addEventListener('pointercancel', onHudPointerUp);
     }
 
     // Color Swatches
