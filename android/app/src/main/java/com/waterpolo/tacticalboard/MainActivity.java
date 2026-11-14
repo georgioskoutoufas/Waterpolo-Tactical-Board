@@ -59,6 +59,11 @@ public class MainActivity extends Activity {
         getWindow().setNavigationBarColor(Color.parseColor("#090d16"));
         enableImmersiveFullscreen();
 
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+            getWindow().getAttributes().layoutInDisplayCutoutMode =
+                    WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_SHORT_EDGES;
+        }
+
         webView = new WebView(this);
         webView.setBackgroundColor(Color.parseColor("#090d16"));
         setContentView(webView);
@@ -321,6 +326,11 @@ public class MainActivity extends Activity {
         super.onWindowFocusChanged(hasFocus);
         if (hasFocus) {
             enableImmersiveFullscreen();
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+            getWindow().getAttributes().layoutInDisplayCutoutMode =
+                    WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_SHORT_EDGES;
+        }
         }
     }
 
